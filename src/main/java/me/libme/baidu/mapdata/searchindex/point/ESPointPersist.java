@@ -1,7 +1,7 @@
 package me.libme.baidu.mapdata.searchindex.point;
 
 import me.libme.module.es5x6.ESDocumentOperations;
-import me.libme.module.es5x6.IESModel;
+import me.libme.module.es5x6.ESModel;
 
 import java.util.Map;
 
@@ -27,11 +27,15 @@ public class ESPointPersist implements IPointPersist {
     public void persist(Point point) throws Exception {
 
 
-        IESModel esModel=point.esModel();
+        ESModel esModel=point.esModel();
+        esModel.operations()
+                .indexName(indexName)
+                .type(typeName);
+
         String esId=esModel.esId();
         Map map=documentOperations.one(indexName,typeName,esId);
 
-        if(map.isEmpty()){
+        if(map==null||map.isEmpty()){
             documentOperations.insert(indexName,typeName,esModel);
         }else{
             documentOperations.update(indexName,typeName,esId,esModel);

@@ -1,7 +1,6 @@
 package test.me.libme.baidu.mapdata.searchindex;
 
 import me.libme.baidu.mapdata.searchindex.impl.ReferencePoint;
-import me.libme.baidu.mapdata.searchindex.impl.SimplePoint;
 import me.libme.baidu.mapdata.searchindex.keyword.KeywordSearch;
 import me.libme.baidu.mapdata.searchindex.keyword.SearchParam;
 import me.libme.baidu.mapdata.searchindex.point.Point;

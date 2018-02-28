@@ -1,5 +1,7 @@
 package me.libme.baidu.mapdata.searchindex.impl;
 
+import me.libme.module.es5x6.ESModel;
+
 /**
  * Created by J on 2018/2/28.
  */
@@ -63,5 +65,22 @@ public class ReferencePoint extends SimplePoint {
 
     public void setChangeLog(String changeLog) {
         this.changeLog = changeLog;
+    }
+
+    @Override
+    public ESModel esModel() {
+        ESModel esModel=new ESModel();
+        esModel.operations()
+                .id(logicUniqueId())
+                .setString("name",name())
+                .setString("longitude",longitude())
+                .setString("latitude",latitude())
+                .setString("addr",addr())
+                .setString("description",getDescription())
+                .setString("link",getLink())
+                .setString("category",getCategory())
+                .setString("changeLog",getChangeLog())
+                .setString("longitude",longitude());
+        return esModel;
     }
 }

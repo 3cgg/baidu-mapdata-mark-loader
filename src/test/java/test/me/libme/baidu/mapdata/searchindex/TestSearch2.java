@@ -26,18 +26,18 @@ public class TestSearch2 {
 
 
 
-
+//
 //        RestHighLevelClient restHighLevelClient
 //                =new RestHighLevelClientBuilder()
 ////                .addAddress("192.168.0.113",9200)
 ////                .addAddress("192.168.93.128",9200)
-//                .addAddress("218.4.170.234",9300)
+//                .addAddress("218.4.170.234",9200)
 ////                .auth("elastic","changeme")
 ////                .addHeader("ES_REQUEST","ONLY_TEST")
 //                .build();
 //        RestESDocumentOperations restESDocumentOperations=new RestESDocumentOperations(restHighLevelClient)
 //                .configure().bulkProcessor(new SimpleBulkProcessorFactory()).ok();
-
+//
 
         Topic keywordTopic=new Topic("baidu-keyword");
         KeywordSearch keywordSearch=new DefaultKeywordSearch();
@@ -45,17 +45,16 @@ public class TestSearch2 {
 
         Topic mapdataTopic=new Topic("map-data");
 
-//        String indexName="";
-//        String typeName="";
+//        String indexName="cpp-mappoint-index";
+//        String typeName="point";
+//        IPointPersist pointPersist=new ESPointPersist(restESDocumentOperations,indexName,typeName);
         IPointPersist pointPersist=new MockESPoint();//new ESPointPersist(restESDocumentOperations,indexName,typeName);
-
 
         BaiduSearchPersistStarter.builder()
                 .keywordTopic(keywordTopic)
                 .keywordSearch(keywordSearch)
                 .mapdataTopic(mapdataTopic)
                 .pointPersist(pointPersist)
-//                .documentOperations(restESDocumentOperations)
                 .build().start();
 
 
