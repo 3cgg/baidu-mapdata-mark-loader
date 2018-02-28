@@ -1,8 +1,9 @@
-package me.libme.baidu.mapdata.searchindex;
+package me.libme.baidu.mapdata.searchindex.point;
 
 import me.libme.kernel._c.util.MD5;
 import me.libme.module.es5x6.ESModel;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -40,7 +41,7 @@ public interface Point {
      * 备注数据
      * @return
      */
-    Map<String,Object> data();
+    default Map<String,Object> data(){return Collections.EMPTY_MAP;}
 
 
     default ESModel esModel(){throw new UnsupportedOperationException();}

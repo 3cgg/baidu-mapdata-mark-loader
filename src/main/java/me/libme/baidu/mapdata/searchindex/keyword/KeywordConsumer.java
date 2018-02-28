@@ -1,9 +1,11 @@
-package me.libme.baidu.mapdata.searchindex;
+package me.libme.baidu.mapdata.searchindex.keyword;
 
+import me.libme.baidu.mapdata.searchindex.point.Point;
 import me.libme.kernel._c.pubsub.Produce;
 import me.libme.kernel._c.pubsub.Publisher;
 import me.libme.xstream.Compositer;
 import me.libme.xstream.ConsumerMeta;
+import me.libme.xstream.EntryTupe;
 import me.libme.xstream.Tupe;
 
 import java.util.Iterator;
@@ -30,7 +32,7 @@ public class KeywordConsumer extends Compositer {
     protected void doConsume(Tupe tupe) throws Exception {
 
         Iterator iterator= tupe.iterator();
-        SearchParam searchParam= (SearchParam) iterator.next();
+        SearchParam searchParam= (SearchParam) ((EntryTupe.Entry)iterator.next()).getValue();
         List<Point> points=keywordSearch.search(searchParam);
         points.forEach(point -> produce.produce(point));
 

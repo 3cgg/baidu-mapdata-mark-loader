@@ -1,4 +1,4 @@
-package me.libme.baidu.mapdata.searchindex;
+package me.libme.baidu.mapdata.searchindex.point;
 
 import me.libme.kernel._c.pubsub.Consume;
 import me.libme.kernel._c.pubsub.Subscriber;
@@ -8,20 +8,22 @@ import me.libme.xstream.*;
 /**
  * Created by J on 2018/2/27.
  */
-public class MapDataSourcer extends SimpleSourcer {
+public class MapDataSourcer implements WindowSourcer {
 
     private final Subscriber subscriber;
 
     private final Consume consume;
 
+    private final SourceMeta sourceMeta;
+
     public MapDataSourcer(SourceMeta sourceMeta, Subscriber subscriber) {
-        super(sourceMeta);
+        this.sourceMeta=sourceMeta;
         this.subscriber=subscriber;
         this.consume=subscriber.consume();
     }
 
     @Override
-    protected Tupe doNext() {
+    public Tupe next() {
         Point point= (Point) consume.next();
         FlexTupe flexTupe=new FlexTupe();
         String sequence=JUniqueUtils.unique();

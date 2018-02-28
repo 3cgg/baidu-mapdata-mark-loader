@@ -1,4 +1,4 @@
-package me.libme.baidu.mapdata.searchindex;
+package me.libme.baidu.mapdata.searchindex.point;
 
 import me.libme.module.es5x6.ESDocumentOperations;
 import me.libme.module.es5x6.IESModel;
@@ -11,14 +11,16 @@ import java.util.Map;
 public class ESPointPersist implements IPointPersist {
 
 
-    private ESDocumentOperations documentOperations;
+    private final ESDocumentOperations documentOperations;
 
-    private String indexName;
+    private final String indexName;
 
-    private String typeName;
+    private final String typeName;
 
-    public ESPointPersist(ESDocumentOperations documentOperations) {
+    public ESPointPersist(ESDocumentOperations documentOperations, String indexName, String typeName) {
         this.documentOperations = documentOperations;
+        this.indexName = indexName;
+        this.typeName = typeName;
     }
 
     @Override
@@ -32,10 +34,8 @@ public class ESPointPersist implements IPointPersist {
         if(map.isEmpty()){
             documentOperations.insert(indexName,typeName,esModel);
         }else{
-
+            documentOperations.update(indexName,typeName,esId,esModel);
         }
-
-
 
     }
 

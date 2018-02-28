@@ -1,4 +1,4 @@
-package me.libme.baidu.mapdata.searchindex;
+package me.libme.baidu.mapdata.searchindex.point;
 
 /**
  * Created by J on 2018/2/27.

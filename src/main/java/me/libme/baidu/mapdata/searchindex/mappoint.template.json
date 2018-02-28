@@ -1,0 +1,73 @@
+{
+  "template": "cpp-mappoint-index",
+  "settings": {
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "smart-push": {
+      "_source": {
+        "enabled": true
+      },
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "name": {
+          "type": "text",
+          "analyzer": "ik_smart",
+          "search_analyzer": "ik_smart",
+          "fields":{
+            "keyword":{
+              "type": "keyword"
+            }
+          }
+        },
+        "longitude": {
+          "type": "keyword"
+        },
+        "latitude": {
+          "type": "keyword"
+        },
+        "addr": {
+          "type": "text",
+          "analyzer": "ik_smart",
+          "search_analyzer": "ik_smart",
+          "fields":{
+            "keyword":{
+              "type": "keyword"
+            }
+          }
+        },
+        "description": {
+          "type": "text",
+          "analyzer": "ik_smart",
+          "search_analyzer": "ik_smart"
+        },
+        "link": {
+          "type": "text",
+          "analyzer": "whitespace",
+          "search_analyzer": "whitespace",
+          "fields":{
+            "keyword":{
+              "type": "keyword"
+            }
+          }
+        },
+        "category": {
+          "type": "text",
+          "analyzer": "whitespace",
+          "search_analyzer": "whitespace",
+          "fields":{
+            "keyword":{
+              "type": "keyword"
+            }
+          }
+        },
+        "changeLog": {
+          "type": "keyword"
+        }
+
+      }
+    }
+  }
+}

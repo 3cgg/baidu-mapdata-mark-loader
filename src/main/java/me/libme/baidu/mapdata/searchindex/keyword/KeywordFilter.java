@@ -1,7 +1,8 @@
-package me.libme.baidu.mapdata.searchindex;
+package me.libme.baidu.mapdata.searchindex.keyword;
 
 import me.libme.kernel._c.cache.JCacheService;
 import me.libme.kernel._c.cache.JMapCacheService;
+import me.libme.xstream.EntryTupe;
 import me.libme.xstream.Filter;
 import me.libme.xstream.Tupe;
 
@@ -19,8 +20,8 @@ public class KeywordFilter implements Filter {
 
         Iterator iterator= tupe.iterator();
 
-        SearchParam searchParam= (SearchParam) iterator.next();
-        boolean exists=false;
+        SearchParam searchParam= (SearchParam) ((EntryTupe.Entry)iterator.next()).getValue();
+        boolean exists;
         if(!(exists=cacheService.contains(searchParam))){
             cacheService.put(searchParam,1);
         }

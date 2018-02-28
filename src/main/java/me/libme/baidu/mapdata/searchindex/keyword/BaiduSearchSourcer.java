@@ -1,4 +1,4 @@
-package me.libme.baidu.mapdata.searchindex;
+package me.libme.baidu.mapdata.searchindex.keyword;
 
 import me.libme.kernel._c.pubsub.Consume;
 import me.libme.kernel._c.pubsub.Subscriber;
@@ -8,20 +8,22 @@ import me.libme.xstream.*;
 /**
  * Created by J on 2018/2/27.
  */
-public class BaiduSearchSourcer extends SimpleSourcer {
+public class BaiduSearchSourcer implements WindowSourcer {
 
     private final Subscriber subscriber;
 
     private final Consume consume;
 
+    private final SourceMeta sourceMeta;
+
     public BaiduSearchSourcer(SourceMeta sourceMeta, Subscriber subscriber) {
-        super(sourceMeta);
+        this.sourceMeta=sourceMeta;
         this.subscriber=subscriber;
         this.consume=subscriber.consume();
     }
 
     @Override
-    protected Tupe doNext() {
+    public Tupe next() {
         Object object= consume.next();
         FlexTupe flexTupe=new FlexTupe();
         String sequence=JUniqueUtils.unique();

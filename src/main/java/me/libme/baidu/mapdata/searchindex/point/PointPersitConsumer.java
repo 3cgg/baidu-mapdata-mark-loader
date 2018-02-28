@@ -1,7 +1,8 @@
-package me.libme.baidu.mapdata.searchindex;
+package me.libme.baidu.mapdata.searchindex.point;
 
 import me.libme.xstream.Compositer;
 import me.libme.xstream.ConsumerMeta;
+import me.libme.xstream.EntryTupe;
 import me.libme.xstream.Tupe;
 
 import java.util.Iterator;
@@ -21,7 +22,7 @@ public class PointPersitConsumer extends Compositer {
     @Override
     protected void doConsume(Tupe tupe) throws Exception {
         Iterator iterator= tupe.iterator();
-        Point point= (Point) iterator.next();
+        Point point= (Point) ((EntryTupe.Entry)iterator.next()).getValue();
         pointPersist.persist(point);
     }
 

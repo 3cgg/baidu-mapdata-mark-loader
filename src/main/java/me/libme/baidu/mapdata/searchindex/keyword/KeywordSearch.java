@@ -1,4 +1,6 @@
-package me.libme.baidu.mapdata.searchindex;
+package me.libme.baidu.mapdata.searchindex.keyword;
+
+import me.libme.baidu.mapdata.searchindex.point.Point;
 
 import java.util.List;
 
