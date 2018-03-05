@@ -16,7 +16,7 @@ public class KeywordSearchParser implements BaiduUrlParser<SearchConf> {
     @Override
     public String parse(SearchConf baiduConf) {
 
-        Objects.requireNonNull(baiduConf.getSearchUrl());
+        Objects.requireNonNull(baiduConf.getPlaceUrl());
         Objects.requireNonNull(baiduConf.getAk());
         List<String> items=new ArrayList<>();
 
@@ -44,7 +44,7 @@ public class KeywordSearchParser implements BaiduUrlParser<SearchConf> {
             items.add("ak="+baiduConf.getAk());
         }
 
-        String searchUrl=baiduConf.getSearchUrl().join("&",items);
+        String searchUrl=baiduConf.getPlaceUrl()+String.join("&",items);
 
         return searchUrl;
     }

@@ -11,6 +11,10 @@ public class BaiduConf {
      */
     private String ak;
 
+    /**
+     * http://api.map.baidu.com/place/v2/search?
+     */
+    private String placeUrl;
 
     public String getAk() {
         return ak;
@@ -20,9 +24,18 @@ public class BaiduConf {
         this.ak = ak;
     }
 
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public String getPlaceUrl() {
+        return placeUrl;
     }
+
+    public void setPlaceUrl(String placeUrl) {
+        this.placeUrl = placeUrl;
+    }
+
+    public <T extends BaiduConf> T from(BaiduConf baiduConf){
+        this.setAk(baiduConf.getAk());
+        this.setPlaceUrl(baiduConf.getPlaceUrl());
+        return (T)this;
+    }
+
 }

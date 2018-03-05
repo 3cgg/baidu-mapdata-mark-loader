@@ -1,6 +1,8 @@
 package me.libme.baidu.mapdata.searchindex.impl.place;
 
+import me.libme.baidu.mapdata.searchindex.impl.BaiduConf;
 import me.libme.baidu.mapdata.searchindex.impl.ReferencePoint;
+import me.libme.baidu.mapdata.searchindex.impl.SimpleSearchParam;
 import me.libme.baidu.mapdata.searchindex.impl.place.response.BaiduPlaceResponse;
 import me.libme.baidu.mapdata.searchindex.keyword.KeywordSearch;
 import me.libme.baidu.mapdata.searchindex.keyword.SearchParam;
@@ -19,11 +21,11 @@ public class SimpleBaiduSearch implements KeywordSearch {
 
     private final KeywordSearchParser keywordSearchParser;
 
-    private final SearchConf _default;
+    private final BaiduConf baiduConf;
 
-    public SimpleBaiduSearch(KeywordSearchParser keywordSearchParser, SearchConf _default) {
+    public SimpleBaiduSearch(KeywordSearchParser keywordSearchParser, BaiduConf baiduConf) {
         this.keywordSearchParser = keywordSearchParser;
-        this._default = _default;
+        this.baiduConf = baiduConf;
     }
 
     private void collect(SearchConf searchConf, List<Point> points){
@@ -59,15 +61,12 @@ public class SimpleBaiduSearch implements KeywordSearch {
 
     @Override
     public List<Point> search(SearchParam searchParam) {
-
-        try {
-            SearchConf target=_default.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        searchConf.setQuery(searchParam.keyword());
+        SimpleSearchParam simpleSearchParam=(SimpleSearchParam)searchParam;
+        SearchConf target=new SearchConf().from(baiduConf);
+        target.setQuery(simpleSearchParam.keyword());
+        target.setRegion(simpleSearchParam.getRegion());
         List<Point> points=new ArrayList<>();
-        collect(searchConf,points);
+        collect(target,points);
         return points;
 
 

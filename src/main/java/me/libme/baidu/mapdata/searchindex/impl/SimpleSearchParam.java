@@ -9,8 +9,18 @@ public class SimpleSearchParam implements SearchParam {
 
     private String keyword;
 
+    private String region;
+
+    public SimpleSearchParam() {
+    }
+
     public SimpleSearchParam(String keyword) {
         this.keyword = keyword;
+    }
+
+    public SimpleSearchParam(String keyword, String region) {
+        this.keyword = keyword;
+        this.region = region;
     }
 
     public String getKeyword() {
@@ -19,6 +29,14 @@ public class SimpleSearchParam implements SearchParam {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     @Override

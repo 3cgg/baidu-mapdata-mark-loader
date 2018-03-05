@@ -1,26 +1,22 @@
 package test.me.libme.baidu.mapdata.searchindex;
 
-import me.libme.baidu.mapdata.searchindex.keyword.BaiduSearchSourcer;
-import me.libme.baidu.mapdata.searchindex.keyword.KeywordConsumer;
-import me.libme.baidu.mapdata.searchindex.keyword.KeywordFilter;
+import me.libme.baidu.mapdata.searchindex.impl.BaiduConf;
+import me.libme.baidu.mapdata.searchindex.impl.BaiduSearchPersistStarter;
+import me.libme.baidu.mapdata.searchindex.impl.SimpleSearchParam;
+import me.libme.baidu.mapdata.searchindex.impl.place.KeywordSearchParser;
+import me.libme.baidu.mapdata.searchindex.impl.place.SimpleBaiduSearch;
 import me.libme.baidu.mapdata.searchindex.keyword.KeywordSearch;
-import me.libme.baidu.mapdata.searchindex.point.ESPointPersist;
 import me.libme.baidu.mapdata.searchindex.point.IPointPersist;
-import me.libme.baidu.mapdata.searchindex.point.MapDataSourcer;
-import me.libme.baidu.mapdata.searchindex.point.PointPersitConsumer;
-import me.libme.kernel._c.pubsub.*;
-import me.libme.kernel._c.util.ThreadUtil;
-import me.libme.module.es5x6.RestESDocumentOperations;
-import me.libme.module.es5x6.RestHighLevelClientBuilder;
-import me.libme.module.es5x6.SimpleBulkProcessorFactory;
-import me.libme.xstream.ConsumerMeta;
-import me.libme.xstream.SourceMeta;
-import me.libme.xstream.WindowTopology;
-import org.elasticsearch.client.RestHighLevelClient;
+import me.libme.baidu.mapdata.searchindex.point.MockESPoint;
+import me.libme.kernel._c.pubsub.Publisher;
+import me.libme.kernel._c.pubsub.QueuePools;
+import me.libme.kernel._c.pubsub.Topic;
 
-import java.util.concurrent.ExecutorService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by J on 2018/2/28.
@@ -28,77 +24,73 @@ import java.util.concurrent.ScheduledExecutorService;
 public class TestSearch {
 
 
-    private static ExecutorService searchExecutor= Executors.newFixedThreadPool(ThreadUtil.recommendCount(),
-            r->new Thread(r,"real thread on executing topology[keyword search]"));
-
-    private static ScheduledExecutorService windowExecutor=Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(),
-            r->new Thread(r,"window-topology-scheduler"));
-
-    private static ExecutorService mapdataExecutor= Executors.newFixedThreadPool(ThreadUtil.recommendCount(),
-            r->new Thread(r,"real thread on executing topology[mapdata persist]"));
-
     public static void main(String[] args) throws InterruptedException{
 
 
-        RestHighLevelClient restHighLevelClient
-                =new RestHighLevelClientBuilder()
-//                .addAddress("192.168.0.113",9200)
-                .addAddress("192.168.93.128",9200)
-                .auth("elastic","changeme")
-                .addHeader("ES_REQUEST","ONLY_TEST")
-                .build();
-
-        RestESDocumentOperations restESDocumentOperations=new RestESDocumentOperations(restHighLevelClient)
-                .configure().bulkProcessor(new SimpleBulkProcessorFactory()).ok();
 
 
+//
+//        RestHighLevelClient restHighLevelClient
+//                =new RestHighLevelClientBuilder()
+////                .addAddress("192.168.0.113",9200)
+////                .addAddress("192.168.93.128",9200)
+//                .addAddress("218.4.170.234",9200)
+////                .auth("elastic","changeme")
+////                .addHeader("ES_REQUEST","ONLY_TEST")
+//                .build();
+//        RestESDocumentOperations restESDocumentOperations=new RestESDocumentOperations(restHighLevelClient)
+//                .configure().bulkProcessor(new SimpleBulkProcessorFactory()).ok();
+//
+
+        Topic keywordTopic=new Topic("baidu-keyword");
+//        KeywordSearch keywordSearch=new DefaultKeywordSearch();
 
 
-        QueuePool queuePool=QueuePools.defaultPool();
-
-        //keyword
-        SourceMeta sourceMeta=new SourceMeta("Keyword Source");
-        Subscriber subscriber=new Subscriber(new Topic("Baidu Keyword"), queuePool);
-
-        BaiduSearchSourcer baiduSearchSourcer=new BaiduSearchSourcer(sourceMeta,subscriber);
-
-        KeywordFilter keywordFilter=new KeywordFilter();
+        BaiduConf baiduConf=new BaiduConf();
+        baiduConf.setPlaceUrl("http://api.map.baidu.com/place/v2/search?");
+        baiduConf.setAk("kGVeZwfybkB9ffG9hbKx4hwzwZBsN4YH");
+        KeywordSearchParser keywordSearchParser=new KeywordSearchParser();
+        KeywordSearch keywordSearch=new SimpleBaiduSearch(keywordSearchParser,baiduConf);
 
         Topic mapdataTopic=new Topic("map-data");
 
-        Publisher publisher=new Publisher(mapdataTopic,queuePool);
+//        String indexName="cpp-mappoint-index";
+//        String typeName="point";
+//        IPointPersist pointPersist=new ESPointPersist(restESDocumentOperations,indexName,typeName);
+        IPointPersist pointPersist=new MockESPoint();//new ESPointPersist(restESDocumentOperations,indexName,typeName);
 
-        KeywordSearch keywordSearch=new DefaultKeywordSearch();
-
-        KeywordConsumer keywordConsumer=new KeywordConsumer(new ConsumerMeta("Keyword Consumer"),keywordSearch,publisher);
-
-        WindowTopology.builder().setName("Baidu Keyword Search")
-                .setSourcer(baiduSearchSourcer)
-                .addFiler(keywordFilter)
-                .addConsumer(keywordConsumer)
-                .windowExecutor(windowExecutor)
-                .executor(searchExecutor)
+        BaiduSearchPersistStarter.builder()
+                .keywordTopic(keywordTopic)
+                .keywordSearch(keywordSearch)
+                .mapdataTopic(mapdataTopic)
+                .pointPersist(pointPersist)
                 .build().start();
 
-        //mapdata
+
+        Publisher publisher=new Publisher(keywordTopic, QueuePools.defaultPool());
 
 
-        SourceMeta mapdataSourceMeta=new SourceMeta("Mapdata Source");
-        Subscriber mapdataSubscriber=new Subscriber(mapdataTopic, queuePool);
+        List data=new ArrayList();
+        data.add(new SimpleSearchParam("祖庙","苏州"));
+        data.add(new SimpleSearchParam("狮子林","苏州"));
+        data.add(new SimpleSearchParam("博物馆","苏州"));
+        data.add(new SimpleSearchParam("欧尚","苏州"));
+        data.add(new SimpleSearchParam("金鸡湖","苏州"));
+        data.add(new SimpleSearchParam("科技园","苏州"));
+        data.add(new SimpleSearchParam("独墅湖","苏州"));
 
-        MapDataSourcer mapDataSourcer=new MapDataSourcer(mapdataSourceMeta,mapdataSubscriber);
+        Executors.newScheduledThreadPool(1)
+                .scheduleAtFixedRate(()->{
+                    try {
 
-        String indexName="";
-        String typeName="";
-        IPointPersist pointPersist=new ESPointPersist(restESDocumentOperations,indexName,typeName);
-        PointPersitConsumer pointPersitConsumer=new PointPersitConsumer(new ConsumerMeta("Point Persist"),pointPersist);
+                        publisher.produce().produce(data.get(new Random().nextInt(data.size())));
 
-        WindowTopology.builder().setName("Baidu Mapdata Persist")
-                .setSourcer(mapDataSourcer)
-                .addConsumer(pointPersitConsumer)
-                .windowExecutor(windowExecutor)
-                .executor(mapdataExecutor)
-                .build().start();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                },0,5000, TimeUnit.MILLISECONDS);
+
+
 
         Thread.sleep(15*1000);
 

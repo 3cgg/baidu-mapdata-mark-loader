@@ -7,14 +7,11 @@ import me.libme.baidu.mapdata.searchindex.impl.BaiduConf;
  */
 public class SearchConf extends BaiduConf {
 
+    private String pageSize="20";
 
-    private String searchUrl;
+    private String pageNum="0";
 
-    private String pageSize;
-
-    private String pageNum;
-
-    private String output;
+    private String output="json";
 
     private String query;
 
@@ -26,14 +23,6 @@ public class SearchConf extends BaiduConf {
 
     public void setRegion(String region) {
         this.region = region;
-    }
-
-    public String getSearchUrl() {
-        return searchUrl;
-    }
-
-    public void setSearchUrl(String searchUrl) {
-        this.searchUrl = searchUrl;
     }
 
     public String getPageSize() {
@@ -67,4 +56,6 @@ public class SearchConf extends BaiduConf {
     public void setQuery(String query) {
         this.query = query;
     }
+
+
 }
