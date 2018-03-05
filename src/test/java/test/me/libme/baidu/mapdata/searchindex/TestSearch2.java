@@ -2,6 +2,8 @@ package test.me.libme.baidu.mapdata.searchindex;
 
 import me.libme.baidu.mapdata.searchindex.impl.BaiduSearchPersistStarter;
 import me.libme.baidu.mapdata.searchindex.impl.SimpleSearchParam;
+import me.libme.baidu.mapdata.searchindex.impl.place.KeywordSearchParser;
+import me.libme.baidu.mapdata.searchindex.impl.place.SimpleBaiduSearch;
 import me.libme.baidu.mapdata.searchindex.keyword.KeywordSearch;
 import me.libme.baidu.mapdata.searchindex.point.IPointPersist;
 import me.libme.baidu.mapdata.searchindex.point.MockESPoint;
@@ -40,8 +42,11 @@ public class TestSearch2 {
 //
 
         Topic keywordTopic=new Topic("baidu-keyword");
-        KeywordSearch keywordSearch=new DefaultKeywordSearch();
+//        KeywordSearch keywordSearch=new DefaultKeywordSearch();
 
+
+        KeywordSearchParser keywordSearchParser=new KeywordSearchParser();
+        KeywordSearch keywordSearch=new SimpleBaiduSearch(keywordSearchParser);
 
         Topic mapdataTopic=new Topic("map-data");
 

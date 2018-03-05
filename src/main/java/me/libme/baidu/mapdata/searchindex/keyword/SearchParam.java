@@ -7,4 +7,13 @@ public interface SearchParam {
 
     String keyword();
 
+
+    /**
+     * identify the search object, the value will be used as key in hash data structures
+     * @return
+     */
+    default String identity(){
+        return keyword();
+    }
+
 }

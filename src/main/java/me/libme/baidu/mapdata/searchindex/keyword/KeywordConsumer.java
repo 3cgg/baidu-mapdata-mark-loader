@@ -38,4 +38,8 @@ public class KeywordConsumer extends Compositer {
 
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

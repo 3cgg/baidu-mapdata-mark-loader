@@ -23,7 +23,7 @@ public class KeywordFilter implements Filter {
         SearchParam searchParam= (SearchParam) ((EntryTupe.Entry)iterator.next()).getValue();
         boolean exists;
         if(!(exists=cacheService.contains(searchParam))){
-            cacheService.put(searchParam,1);
+            cacheService.put(searchParam.identity(),searchParam);
         }
         return !exists;
     }
