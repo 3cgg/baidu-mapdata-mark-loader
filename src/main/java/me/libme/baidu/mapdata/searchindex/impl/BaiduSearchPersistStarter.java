@@ -98,6 +98,7 @@ public class BaiduSearchPersistStarter implements Topology{
                 .addConsumer(pointPersitConsumer)
                 .windowExecutor(windowExecutor)
                 .executor(mapdataExecutor)
+                .setSchedule(builder.schedule)
                 .build().start();
 
     }
@@ -116,6 +117,13 @@ public class BaiduSearchPersistStarter implements Topology{
         private IPointPersist pointPersist;
 
         private KeywordSearch keywordSearch;
+
+        private int schedule=500;
+
+        public Builder schedule(int schedule) {
+            this.schedule = schedule;
+            return this;
+        }
 
         public Builder keywordTopic(Topic keywordTopic) {
             this.keywordTopic = keywordTopic;

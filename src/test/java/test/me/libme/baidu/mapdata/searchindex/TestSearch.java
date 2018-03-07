@@ -64,6 +64,7 @@ public class TestSearch {
                 .keywordSearch(keywordSearch)
                 .mapdataTopic(mapdataTopic)
                 .pointPersist(pointPersist)
+                .schedule(2000)
                 .build().start();
 
 
@@ -80,7 +81,7 @@ public class TestSearch {
         data.add(new SimpleSearchParam("独墅湖","苏州"));
 
         Executors.newScheduledThreadPool(1)
-                .scheduleAtFixedRate(()->{
+                .scheduleWithFixedDelay(()->{
                     try {
 
                         publisher.produce().produce(data.get(new Random().nextInt(data.size())));
