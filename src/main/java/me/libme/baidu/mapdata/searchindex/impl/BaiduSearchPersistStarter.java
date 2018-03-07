@@ -80,6 +80,7 @@ public class BaiduSearchPersistStarter implements Topology{
                 .addConsumer(keywordConsumer)
                 .windowExecutor(windowExecutor)
                 .executor(searchExecutor)
+                .setSchedule(builder.schedule)
                 .build().start();
 
         //mapdata
