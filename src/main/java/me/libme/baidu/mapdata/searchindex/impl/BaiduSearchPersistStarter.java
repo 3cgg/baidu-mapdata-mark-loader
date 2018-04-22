@@ -31,7 +31,7 @@ public class BaiduSearchPersistStarter implements Topology{
     private static ExecutorService searchExecutor= Executors.newFixedThreadPool(ThreadUtil.recommendCount(),
             r->new Thread(r,"real thread on executing topology[keyword search]"));
 
-    private static ScheduledExecutorService windowExecutor=Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(),
+    private static ScheduledExecutorService windowExecutor=Executors.newScheduledThreadPool(1,
             r->new Thread(r,"window-topology-scheduler"));
 
     private static ExecutorService mapdataExecutor= Executors.newFixedThreadPool(ThreadUtil.recommendCount(),
